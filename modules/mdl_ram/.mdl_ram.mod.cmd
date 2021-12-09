@@ -1,0 +1,1 @@
+cmd_/home/teitan67/Documentos/SO1_PY1/modules/mdl_ram/mdl_ram.mod := { echo  /home/teitan67/Documentos/SO1_PY1/modules/mdl_ram/mdl_ram.o;  echo; } > /home/teitan67/Documentos/SO1_PY1/modules/mdl_ram/mdl_ram.mod

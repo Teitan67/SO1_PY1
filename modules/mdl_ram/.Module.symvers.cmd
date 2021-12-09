@@ -1,0 +1,1 @@
+cmd_/home/teitan67/Documentos/SO1_PY1/modules/mdl_ram/Module.symvers := sed 's/ko$$/o/' /home/teitan67/Documentos/SO1_PY1/modules/mdl_ram/modules.order | scripts/mod/modpost -m -a   -o /home/teitan67/Documentos/SO1_PY1/modules/mdl_ram/Module.symvers -e -i Module.symvers   -T -
