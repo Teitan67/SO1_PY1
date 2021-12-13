@@ -1,0 +1,16 @@
+INSTALAR
+
+make
+sudo insmod mdl_cpu.ko
+
+dmesg
+sudo dmesg -C
+
+cat /proc/mdl_cpu
+
+DESISNTALAR
+
+make clean
+sudo rmmod mdl_cpu
+
+ps -eo pcpu | sort -k 1 -r | head -50

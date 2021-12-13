@@ -23,9 +23,12 @@ static int getRamInfo(struct seq_file *archivo, void *v)
     long mem_unit;
     long ram_total;
     long ram_ocupada;
+    long ram_libre;
     long ram_porcentaje;
-    seq_printf(archivo, "Leyendo informacion de RAM...\n");
+
+    long cached;
     si_meminfo(&inf);
+
     totalram = inf.totalram;
     freeram = inf.freeram;
     sharedram = inf.sharedram;
@@ -33,21 +36,33 @@ static int getRamInfo(struct seq_file *archivo, void *v)
     totalswap = inf.totalswap;
     freeswap = inf.freeswap;
     mem_unit = inf.mem_unit;
-    ram_total=totalram*mem_unit/1024/1024;
-    ram_ocupada=(freeram*mem_unit/1024/1024);
-    ram_porcentaje=ram_ocupada*100/ram_total;
-    seq_printf(archivo, "\nRAM TOTAL: %li mb",ram_total);
-    seq_printf(archivo, "\nRAM Ocupada: %li mb",ram_ocupada);
-    seq_printf(archivo, "\nPorcentaje: %li \n",ram_porcentaje);
 
-    seq_printf(archivo, "\ntotalram: %li",totalram);
-    seq_printf(archivo, "\nfreeram: %li",freeram);
-    seq_printf(archivo, "\nsharedram: %li",sharedram);
-    seq_printf(archivo, "\nbufferram: %li",bufferram);
-    seq_printf(archivo, "\ntotalswap: %li",totalswap);
-    seq_printf(archivo, "\nfreeswap: %li",freeswap);
-    seq_printf(archivo, "\nfmem_unit: %li \n",mem_unit);
-    
+    cached=global_node_page_state(NR_FILE_PAGES)-global_node_page_state(QC_SPACE)-bufferram;
+
+    if(cached<0){
+        cached=0;
+    }
+    cached=cached*mem_unit/1024/1024;
+    sharedram=sharedram*mem_unit/1024/1024;
+    bufferram=bufferram*mem_unit/1024/1024;
+
+    ram_total=totalram*mem_unit/1024/1024;
+    ram_libre=freeram*mem_unit/1024/1024;
+    ram_ocupada=ram_total-ram_libre-cached+sharedram+bufferram; 
+    ram_porcentaje=ram_ocupada*100/ram_total;
+
+    seq_printf(archivo, "{\n");
+    seq_printf(archivo, "\ttotal: %li,\n",ram_total);
+    seq_printf(archivo, "\tocupada: %li,\n",ram_ocupada);
+    seq_printf(archivo, "\tporcentaje: %li\n",ram_porcentaje);
+    seq_printf(archivo, "\n}\n");
+
+    /*
+    seq_printf(archivo, "\nCache: %li \n",cached);
+    seq_printf(archivo, "\nLibre: %li ",ram_libre);
+    seq_printf(archivo, "\nLibre: %li ",bufferram);
+    seq_printf(archivo, "\nLibre: %li \n",sharedram);
+    */
 
     return 0;
 }
@@ -66,14 +81,14 @@ static struct proc_ops info =
 static int _montar(void)
 {
     proc_create("mdl_ram", 0, NULL, &info);
-    printk(KERN_INFO "Modulo de RAM montado en el kernel...\n");
+    printk(KERN_INFO "Modulo de RAM montado en el kernel 201709144\n");
     return 0;
 }
 
 static void _desmontar(void)
 {
     remove_proc_entry("mdl_ram", NULL);
-    printk(KERN_INFO "Modulo de RAM desmontado en el kernel...\n");
+    printk(KERN_INFO "Modulo de RAM desmontado en el kernel Sistemas Opertativos 1\n");
 }
 
 module_init(_montar);
