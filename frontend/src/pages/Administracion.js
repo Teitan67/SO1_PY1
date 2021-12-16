@@ -26,10 +26,10 @@ export default class Administracion extends Component {
                     </div>
                 </div>
                 <div className='row text-center'>
-                    <div className='col-3 '><button  className='btn btn-primary w-80' onClick={()=>this.goListaProcesos()}>Lista de Procesos</button></div>
-                    <div className='col-3'><button  className='btn btn-primary w-80'>Arbol de procesos</button></div>
-                    <div className='col-3'><button  className='btn btn-primary w-80' onClick={()=>this.goRamInfo()}>Monitor RAM</button></div>
-                    <div className='col-3'><button  className='btn btn-primary w-80' onClick={()=>this.goInformacionCPU()}>Monitor CPU</button></div>
+                    <div className='col-4 '><button  className='btn btn-primary w-80' onClick={()=>this.goListaProcesos()}>Lista de Procesos</button></div>
+                    
+                    <div className='col-4'><button  className='btn btn-primary w-80' onClick={()=>this.goRamInfo()}>Monitor RAM</button></div>
+                    <div className='col-4'><button  className='btn btn-primary w-80' onClick={()=>this.goInformacionCPU()}>Monitor CPU</button></div>
                 </div>
                 <div className='row'>
                     <div className='col-1'></div>

@@ -14,7 +14,8 @@ export default class TablaProcesos extends Component {
         noZombies: 0,
         noDormidos: 0,
         Totales: 0,
-        otros: 0
+        otros: 0,
+        subProcesos: []
     }
 
 
@@ -62,7 +63,7 @@ export default class TablaProcesos extends Component {
 
 
                 if (proceso.estado === 0) {
-                    
+
                     ejecuciones++;
                 } else if (proceso.estado === 1) {
                     suspendidos++;
@@ -72,7 +73,7 @@ export default class TablaProcesos extends Component {
                     zombiez++;
                 } else if (proceso.estado === 1026) {
                     dormidos++;
-                } 
+                }
 
             }
         }
@@ -93,7 +94,24 @@ export default class TablaProcesos extends Component {
         }, 1000);
 
     }
+    getSubProcesos(subProcesosId) {
+        let display = [];
+        if (subProcesosId) {
+            for (const id of subProcesosId) {
+                for (const porceso of this.state.procesos) {
+                    if (porceso.id === id) {
+                        display.unshift(porceso);
+                        break;
+                    }
+                }
+            }
+            this.setState({ subProcesos: display });
+        }
+    }
+    getCountSubProcesos(subProcesos) {
+        if (subProcesos) return subProcesos.length - 1;
 
+    }
     render() {
         return (
             <div className=''>
@@ -124,7 +142,7 @@ export default class TablaProcesos extends Component {
                         <td></td>
                     </tr>
                 </table>
-  
+
                 <div className="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
                     <table className="table fs-lg-4 fs-6 ">
                         <thead className="thead-light fs-6 ">
@@ -140,10 +158,10 @@ export default class TablaProcesos extends Component {
                         <tbody>
                             {
                                 this.state.procesos.map((proceso) => (
-                                    <tr className="row-hover" key={proceso.id} >
+                                    <tr className="row-hover" key={proceso.id} onClick={() => this.getSubProcesos(proceso.hijos)} data-bs-toggle="modal" data-bs-target="#SubProcesosModal">
                                         <td>{proceso.id}</td>
                                         <td>{proceso.user}</td>
-                                        <td>{proceso.nombre}</td>
+                                        <td>{proceso.nombre}({this.getCountSubProcesos(proceso.hijos)})</td>
                                         <td>{proceso.estado}</td>
                                         <td>{proceso.ram}</td>
                                         <td><button className='btn btn-danger' onClick={() => this.killProcess(proceso)}>KIll</button></td>
@@ -153,6 +171,52 @@ export default class TablaProcesos extends Component {
                         </tbody>
                     </table>
                 </div>
+                <div class="modal fade" id="SubProcesosModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="titulo" aria-hidden="true">
+                    <div class="modal-dialog modal-fullscreen">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="titulo">Sub-Procesos</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div className="table-responsive table-wrapper-scroll-y my-custom-scrollbar">
+                                    <table className="table fs-lg-4 fs-6 ">
+                                        <thead className="thead-light fs-6 ">
+                                            <tr>
+                                                <th scope="col">ID</th>
+                                                <th scope="col">Usuario</th>
+                                                <th scope="col">Nombre</th>
+                                                <th scope="col">Estado</th>
+                                                <th scope="col">Ram</th>
+                                                <th scope="col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                this.state.subProcesos.map((proceso) => (
+                                                    <tr className="row-hover" key={proceso.id} onClick={() => this.getSubProcesos(proceso.hijos)} >
+                                                        <td>{proceso.id}</td>
+                                                        <td>{proceso.user}</td>
+                                                        <td>{proceso.nombre}({this.getCountSubProcesos(proceso.hijos)})</td>
+                                                        <td>{proceso.estado}</td>
+                                                        <td>{proceso.ram}</td>
+                                                        <td><button className='btn btn-danger' onClick={() => this.killProcess(proceso)}>KIll</button></td>
+                                                    </tr>
+                                                ))
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         )
     }
