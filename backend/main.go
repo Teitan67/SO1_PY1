@@ -87,6 +87,13 @@ func getCpu(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "{\"cpu\":"+output+"}")
 	go fmt.Println("/getCpu")
 }
+func trafico(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	go fmt.Println(r)
+	go fmt.Println("/trafico")
+}
 
 func main() {
 	go fmt.Println("Servidor escuchando en el puesto 4200...")
@@ -95,6 +102,7 @@ func main() {
 	http.HandleFunc("/getListaProcesos", getListaProcesos)
 	http.HandleFunc("/getCpu", getCpu)
 	http.HandleFunc("/killProcess", killProcess)
+	http.HandleFunc("/trafico", trafico)
 	err := http.ListenAndServe(":4200", nil)
 	if err != nil {
 		log.Fatal(err)
