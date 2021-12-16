@@ -52,9 +52,9 @@ static int getRamInfo(struct seq_file *archivo, void *v)
     ram_porcentaje=ram_ocupada*100/ram_total;
 
     seq_printf(archivo, "{\n");
-    seq_printf(archivo, "\ttotal: %li,\n",ram_total);
-    seq_printf(archivo, "\tocupada: %li,\n",ram_ocupada);
-    seq_printf(archivo, "\tporcentaje: %li\n",ram_porcentaje);
+    seq_printf(archivo, "\t\"total\": %li,\n",ram_total);
+    seq_printf(archivo, "\t\"ocupada\": %li,\n",ram_ocupada);
+    seq_printf(archivo, "\t\"porcentaje\": %li\n",ram_porcentaje);
     seq_printf(archivo, "\n}\n");
 
     /*

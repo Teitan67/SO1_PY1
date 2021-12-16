@@ -1,0 +1,1 @@
+cmd_/home/teitan67/Documentos/SO1_PY1/modules/mdl_cpu/mdl_cpu.ko := ld -r -m elf_x86_64  --build-id=sha1  -T scripts/module.lds -o /home/teitan67/Documentos/SO1_PY1/modules/mdl_cpu/mdl_cpu.ko /home/teitan67/Documentos/SO1_PY1/modules/mdl_cpu/mdl_cpu.o /home/teitan67/Documentos/SO1_PY1/modules/mdl_cpu/mdl_cpu.mod.o;  true

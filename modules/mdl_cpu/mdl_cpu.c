@@ -20,23 +20,23 @@ static int getCpuInfo(struct seq_file *archivo, void *v)
     seq_printf(archivo,"[\n");
     for_each_process(procesos){
         seq_printf(archivo,"{\n");
-        seq_printf(archivo,"\tid:%d,\n",procesos->pid);
-        seq_printf(archivo,"\tnombre:\"%s\",\n",procesos->comm);
-        seq_printf(archivo,"\testado:%li,\n",procesos->state);
-       // seq_printf(archivo,"\tuser:%d,\n",procesos->__user);
-        seq_printf(archivo,"\tram:%d,\n",__kuid_val(procesos->real_cred->uid));
+        seq_printf(archivo,"\t\"id\":%d,\n",procesos->pid);
+        seq_printf(archivo,"\t\"nombre\":\"%s\",\n",procesos->comm);
+        seq_printf(archivo,"\t\"estado\":%li,\n",procesos->state);
+        seq_printf(archivo,"\t\"user\":%d,\n",procesos->cred->uid.val);
+        seq_printf(archivo,"\t\"ram\":%d,\n",__kuid_val(procesos->real_cred->uid));
 
-        seq_printf(archivo,"\thijos:[\n");
+        seq_printf(archivo,"\t\"hijos\":[\n");
 
         list_for_each(subProcesos,&(procesos->children)){
             sub_proceso=list_entry(subProcesos,struct task_struct, sibling);
             seq_printf(archivo,"\t\t%d,\n",sub_proceso->pid);
         }
-        seq_printf(archivo,"\t]\n");
+        seq_printf(archivo,"\t-1]\n");
         seq_printf(archivo,"},\n");
 
     }  
-    seq_printf(archivo,"]\n");
+    seq_printf(archivo,"{}]\n");
     return 0;
 }
 

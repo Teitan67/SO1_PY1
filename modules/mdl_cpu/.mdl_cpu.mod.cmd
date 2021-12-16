@@ -1,0 +1,1 @@
+cmd_/home/teitan67/Documentos/SO1_PY1/modules/mdl_cpu/mdl_cpu.mod := { echo  /home/teitan67/Documentos/SO1_PY1/modules/mdl_cpu/mdl_cpu.o;  echo; } > /home/teitan67/Documentos/SO1_PY1/modules/mdl_cpu/mdl_cpu.mod

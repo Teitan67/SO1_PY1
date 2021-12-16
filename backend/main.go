@@ -5,8 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os/exec"
-	"strconv"
-	"strings"
 )
 
 func prueba(w http.ResponseWriter, r *http.Request) {
@@ -15,6 +13,8 @@ func prueba(w http.ResponseWriter, r *http.Request) {
 }
 
 func getRamInfo(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 	cmd := exec.Command("sh", "-c", "cat /proc/mdl_ram")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -26,6 +26,11 @@ func getRamInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func getListaProcesos(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	// return "OKOK"
+	//json.NewEncoder(w).Encode("OKOK")
 	cmd := exec.Command("sh", "-c", "cat /proc/mdl_cpu")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
@@ -37,6 +42,9 @@ func getListaProcesos(w http.ResponseWriter, r *http.Request) {
 }
 
 func killProcess(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
 	pid := r.URL.Query()["id"]
 	cmd := exec.Command("sh", "-c", "kill "+pid[0])
 	out, err := cmd.CombinedOutput()
@@ -49,40 +57,45 @@ func killProcess(w http.ResponseWriter, r *http.Request) {
 }
 
 func getCpu(w http.ResponseWriter, r *http.Request) {
-	cmd := exec.Command("sh", "-c", "ps -eo pcpu | sort -k 1 -r | head -50")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	cmd := exec.Command("sh", "-c", "top -bn 1 -i -c | head -n 3 | tail -1 | awk {'print $8'}")
 	out, err := cmd.CombinedOutput()
 	if err != nil {
 		log.Fatal(err)
 	}
 	output := string(out[:])
+	/*
+		output := string(out[:])
 
-	s := strings.Split(output, "\n")
-	porcentaje := 0.0
-	for i := 1; i < len(s); i++ {
-		if s[i] != "" {
-			const bitSize = 64
-			floatNum, err := strconv.ParseFloat(strings.Replace(s[i], " ", "", -1), bitSize)
+		s := strings.Split(output, "\n")
+		porcentaje := 0.0
+		for i := 1; i < len(s); i++ {
+			if s[i] != "" {
+				const bitSize = 64
+				floatNum, err := strconv.ParseFloat(strings.Replace(s[i], " ", "", -1), bitSize)
 
-			if err != nil {
-				log.Fatal(err)
-			} else {
-				porcentaje += floatNum
+				if err != nil {
+					log.Fatal(err)
+				} else {
+					porcentaje += floatNum
+				}
 			}
 		}
-	}
-
-	fmt.Fprintf(w, "{cpu:"+fmt.Sprintf("%f", porcentaje)+"}")
+	*/
+	fmt.Fprintf(w, "{\"cpu\":"+output+"}")
 	go fmt.Println("/getCpu")
 }
 
 func main() {
-	go fmt.Println("Servidor escuchando en el puesto 3000...")
+	go fmt.Println("Servidor escuchando en el puesto 4200...")
 	http.HandleFunc("/test", prueba)
 	http.HandleFunc("/getRamInfo", getRamInfo)
 	http.HandleFunc("/getListaProcesos", getListaProcesos)
 	http.HandleFunc("/getCpu", getCpu)
 	http.HandleFunc("/killProcess", killProcess)
-	err := http.ListenAndServe(":3000", nil)
+	err := http.ListenAndServe(":4200", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
